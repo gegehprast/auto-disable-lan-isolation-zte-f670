@@ -11,5 +11,7 @@
 # storage
 /storage
 
+/logs
+
 # puppeteer
 /puppeteer_isolated_profile

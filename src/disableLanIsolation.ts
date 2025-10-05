@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer'
 import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
+import log from './logging.js'
 
 const USER_DATA_DIR = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
@@ -16,7 +17,7 @@ const sleep: (ms: number) => Promise<void> = (ms) => {
 }
 
 const setupPreferences = async () => {
-    console.log('Setting up browser preferences...')
+    log('Setting up browser preferences...')
 
     // Launch a temporary browser instance to create the user data directory
     const browserToExtractPreferences = await puppeteer.launch({
@@ -52,7 +53,7 @@ const setupPreferences = async () => {
 }
 
 const initializeBrowser: () => Promise<void> = async () => {
-    console.log('Opening browser...')
+    log('Opening browser...')
     await setupPreferences()
 
     browser = await puppeteer.launch({
@@ -68,7 +69,7 @@ const initializeBrowser: () => Promise<void> = async () => {
 }
 
 const login: (page: puppeteer.Page) => Promise<void> = async (page) => {
-    console.log('Logging in...')
+    log('Logging in...')
 
     if (!process.env.URL || !process.env.USERNAME || !process.env.PASSWORD) {
         throw new Error(
@@ -83,52 +84,52 @@ const login: (page: puppeteer.Page) => Promise<void> = async (page) => {
         page.click('input[type="submit"]'),
         page.waitForNavigation({ waitUntil: 'networkidle2' }),
     ])
-    console.log('Logged in successfully')
+    log('Logged in successfully')
 }
 
 const navigateToLanSettings: (
     page: puppeteer.Page,
 ) => Promise<puppeteer.Frame> = async (page) => {
-    console.log('Navigating to LAN settings...')
+    log('Navigating to LAN settings...')
 
     await page.waitForSelector('iframe[id="mainFrame"]', { timeout: 5000 })
 
     const iframe = await page.$('iframe[id="mainFrame"]')
-    console.log('Found iframe', iframe ? '✅' : '❌')
+    log('Found iframe', iframe ? '✅' : '❌')
 
     const frame = await iframe?.contentFrame()
-    console.log('Got iframe content frame', frame ? '✅' : '❌')
+    log('Got iframe content frame', frame ? '✅' : '❌')
 
     if (!frame) {
         throw new Error('Failed to get iframe content frame')
     }
 
     const td_mmNet = await frame?.$('td[id="mmNet"]')
-    console.log('Found Network menu item', td_mmNet ? '✅' : '❌')
+    log('Found Network menu item', td_mmNet ? '✅' : '❌')
 
     const tr_Network = await td_mmNet?.evaluateHandle(
         (node) => node?.parentElement,
     )
-    console.log('Got Network menu row', tr_Network ? '✅' : '❌')
+    log('Got Network menu row', tr_Network ? '✅' : '❌')
 
     await tr_Network?.click()
 
     await frame?.waitForSelector('font[id="smAddMgr"]', { timeout: 5000 })
 
     const font_smAddMgr = await frame?.$('font[id="smAddMgr"]')
-    console.log('Found LAN Settings submenu item', font_smAddMgr ? '✅' : '❌')
+    log('Found LAN Settings submenu item', font_smAddMgr ? '✅' : '❌')
 
     const tr_LAN = await font_smAddMgr?.evaluateHandle(
         (node) => node?.parentElement?.parentElement,
     )
-    console.log('Got LAN Settings menu row', tr_LAN ? '✅' : '❌')
+    log('Got LAN Settings menu row', tr_LAN ? '✅' : '❌')
 
     await Promise.all([
         tr_LAN?.click(),
         frame?.waitForNavigation({ waitUntil: 'networkidle2' }),
     ])
 
-    console.log('Navigation completed successfully')
+    log('Navigation completed successfully')
 
     return frame
 }
@@ -142,7 +143,7 @@ const doDisable: (
     })
 
     const input_IsolateEnable = await frame.$('input[name="Frm_IsolateEnable"]')
-    console.log(
+    log(
         'Found LAN Isolation checkbox',
         input_IsolateEnable ? '✅' : '❌',
     )
@@ -151,22 +152,22 @@ const doDisable: (
     const isChecked = await input_IsolateEnable?.evaluate((el) => el.checked)
 
     if (!isChecked) {
-        console.log('LAN Isolation is already disabled ✅')
+        log('LAN Isolation is already disabled ✅')
         return
     }
 
     await input_IsolateEnable?.click()
-    console.log('Clicked LAN Isolation checkbox')
+    log('Clicked LAN Isolation checkbox')
 
     const input_Apply = await frame.$('input[id="Btn_Submit"]')
-    console.log('Found Apply button', input_Apply ? '✅' : '❌')
+    log('Found Apply button', input_Apply ? '✅' : '❌')
 
     await input_Apply?.click()
-    console.log('Clicked Apply button')
+    log('Clicked Apply button')
 
     await frame.waitForNavigation({ waitUntil: 'networkidle2' })
 
-    console.log('LAN Isolation disabled successfully ✅')
+    log('LAN Isolation disabled successfully ✅')
 }
 
 const disableLanIsolation: () => Promise<void> = async () => {
@@ -185,7 +186,7 @@ const disableLanIsolation: () => Promise<void> = async () => {
         await doDisable(page, frame)
         await sleep(500)
         
-        console.log('All done! Exiting...')
+        log('All done! Exiting...')
 
         closeBrowser()
         process.exit(0)
