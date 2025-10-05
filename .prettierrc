@@ -1,0 +1,26 @@
+{
+  "tabWidth": 4,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.css",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.config.js",
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}

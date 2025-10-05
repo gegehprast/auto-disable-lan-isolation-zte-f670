@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+
+# production
+/build
+/dist
+
+# local env files
+.env
+
+# storage
+/storage
+
+# puppeteer
+/puppeteer_isolated_profile

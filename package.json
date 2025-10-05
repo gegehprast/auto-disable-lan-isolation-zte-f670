@@ -1,0 +1,39 @@
+{
+  "name": "auto-disable-lan-isolation-zte-f670",
+  "version": "0.0.1",
+  "description": "Auto Disable ZTE F670 LAN-LAN Isolation",
+  "main": "build/main.js",
+  "types": "./build/main.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tsc --noEmit",
+    "build": "tsdown",
+    "clean": "rm -rf build",
+    "dev": "set APP_ENV=development && tsx watch ./src/main.ts",
+    "prestart": "tsdown",
+    "start": "set APP_ENV=production && node ./build/main.js",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "author": "Gegeh Prast",
+  "homepage": "https://github.com/gegehprast/auto-disable-lan-isolation-zte-f670",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gegehprast/auto-disable-lan-isolation-zte-f670.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "prettier": "^3.6.2",
+    "tsdown": "^0.15.6",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "puppeteer": "^24.23.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
