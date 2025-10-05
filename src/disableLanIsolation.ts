@@ -184,6 +184,8 @@ const disableLanIsolation: () => Promise<void> = async () => {
 
         await doDisable(page, frame)
         await sleep(500)
+        
+        console.log('All done! Exiting...')
 
         closeBrowser()
         process.exit(0)
