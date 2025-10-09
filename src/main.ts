@@ -1,26 +1,27 @@
 import 'dotenv/config'
 import disableLanIsolation, { closeBrowser } from './disableLanIsolation.js'
+import log from './logging.js'
 
 // Global error handlers
 let isShuttingDown = false
 
 const handleError = (error: Error, source: string): void => {
-    console.error(`[APP] ${source}:`, error.stack || error.message)
+    log(`[APP] Error: ${error.name} - ${error.message}`)
 
     if (!isShuttingDown) {
-        console.error('[APP] Fatal error detected, initiating shutdown...')
+        log('[APP] Fatal error detected, initiating shutdown...')
         gracefulShutdown(1)
     }
 }
 
 const gracefulShutdown = async (exitCode: number = 0): Promise<void> => {
     if (isShuttingDown) {
-        console.log('[APP] Shutdown already in progress...')
+        log('[APP] Shutdown already in progress...')
         return
     }
 
     isShuttingDown = true
-    console.log('[APP] Initiating graceful shutdown...')
+    log('[APP] Initiating graceful shutdown...')
 
     try {
         // Give the application time to finish processing
@@ -32,7 +33,7 @@ const gracefulShutdown = async (exitCode: number = 0): Promise<void> => {
         closeBrowser()
         clearTimeout(shutdownTimeout)
 
-        console.log('[APP] Graceful shutdown completed')
+        log('[APP] Graceful shutdown completed')
         process.exit(exitCode)
     } catch (error) {
         console.error('[APP] Error during graceful shutdown:', error)
@@ -56,7 +57,7 @@ const terminationSignals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGQUIT']
 
 terminationSignals.forEach((signal) => {
     process.on(signal, () => {
-        console.log(`[APP] Received ${signal}`)
+        log(`[APP] Received ${signal}`)
         gracefulShutdown(0)
     })
 })
