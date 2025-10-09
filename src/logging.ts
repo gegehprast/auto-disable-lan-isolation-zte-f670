@@ -14,7 +14,7 @@ if (!fs.existsSync(LOG_DIR)) {
 fs.writeFileSync(LOG_FILE, '', 'utf-8')
 
 const log = (...what: any[]): void => {
-    const timestamp = new Date().toISOString()
+    const timestamp = new Date().toLocaleString('sv-SE')
     const logMessage = `[${timestamp}] ${what.join(' ')}\n`
 
     // Log to console
