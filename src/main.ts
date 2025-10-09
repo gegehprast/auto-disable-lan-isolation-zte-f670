@@ -6,7 +6,7 @@ import log from './logging.js'
 let isShuttingDown = false
 
 const handleError = (error: Error, source: string): void => {
-    log(`[APP] Error: ${error.name} - ${error.message}`)
+    log(`[APP] ${source}:`, error.stack || error.message)
 
     if (!isShuttingDown) {
         log('[APP] Fatal error detected, initiating shutdown...')
