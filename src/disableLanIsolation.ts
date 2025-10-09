@@ -29,7 +29,10 @@ const setupPreferences = async () => {
             '--disable-save-password-bubble',
         ],
         userDataDir: USER_DATA_DIR,
-        executablePath: process.env.CHROMIUM_PATH || undefined,
+        executablePath:
+            process.env.CHROMIUM_PATH && process.env.CHROMIUM_PATH !== ''
+                ? process.env.CHROMIUM_PATH
+                : undefined,
     })
     await browserToExtractPreferences.close()
 
@@ -66,7 +69,10 @@ const initializeBrowser: () => Promise<void> = async () => {
             '--disable-save-password-bubble',
         ],
         userDataDir: USER_DATA_DIR,
-        executablePath: process.env.CHROMIUM_PATH || undefined,
+        executablePath:
+            process.env.CHROMIUM_PATH && process.env.CHROMIUM_PATH !== ''
+                ? process.env.CHROMIUM_PATH
+                : undefined,
     })
 }
 
@@ -145,10 +151,7 @@ const doDisable: (
     })
 
     const input_IsolateEnable = await frame.$('input[name="Frm_IsolateEnable"]')
-    log(
-        'Found LAN Isolation checkbox',
-        input_IsolateEnable ? '✅' : '❌',
-    )
+    log('Found LAN Isolation checkbox', input_IsolateEnable ? '✅' : '❌')
 
     // Check if the checkbox is already unchecked
     const isChecked = await input_IsolateEnable?.evaluate((el) => el.checked)
@@ -187,7 +190,7 @@ const disableLanIsolation: () => Promise<void> = async () => {
 
         await doDisable(page, frame)
         await sleep(500)
-        
+
         log('All done! Exiting...')
 
         closeBrowser()
