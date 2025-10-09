@@ -29,6 +29,7 @@ const setupPreferences = async () => {
             '--disable-save-password-bubble',
         ],
         userDataDir: USER_DATA_DIR,
+        executablePath: process.env.CHROMIUM_PATH || undefined,
     })
     await browserToExtractPreferences.close()
 
@@ -65,6 +66,7 @@ const initializeBrowser: () => Promise<void> = async () => {
             '--disable-save-password-bubble',
         ],
         userDataDir: USER_DATA_DIR,
+        executablePath: process.env.CHROMIUM_PATH || undefined,
     })
 }
 
