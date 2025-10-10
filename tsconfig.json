@@ -12,7 +12,8 @@
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "isolatedDeclarations": true,
-    "declaration": true
+    "declaration": true,
+    "noEmit": true
   },
   "include": ["src/**/*.ts"],
 }
