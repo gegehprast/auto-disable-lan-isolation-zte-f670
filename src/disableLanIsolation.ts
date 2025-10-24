@@ -7,7 +7,7 @@ import log from './logging.js'
 
 const USER_DATA_DIR = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../../puppeteer_isolated_profile',
+    '../puppeteer_isolated_profile',
 )
 
 let browser: puppeteer.Browser | null = null
